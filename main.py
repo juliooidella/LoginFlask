@@ -1,7 +1,8 @@
 from flask import flash, render_template, request, redirect, session, url_for
-from flask_login import login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from app import app, db
 from app.models import User
+from werkzeug.security import generate_password_hash, check_password_hash
 
 usuario_logado = None
 print(usuario_logado)
@@ -54,5 +55,25 @@ def logout():
     logout_user()
     session.clear() 
     return redirect(url_for('login'))
+
+@app.route('/change_password', methods=['POST'])
+@login_required  # Use a decoradora @login_required para garantir que apenas usuários autenticados possam acessar esta rota
+def change_password():
+    if request.method == 'POST':
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        if new_password == confirm_password:
+            # Atualize a senha do usuário
+            current_user.password = generate_password_hash(new_password)
+            current_user.new_password = None  # Limpe o campo de nova senha
+
+            db.session.commit()
+            flash("Senha alterada com sucesso.", 'success')
+            return redirect(url_for('home'))
+        else:
+            flash("As senhas não coincidem. Tente novamente.", 'error')
+
+    return render_template('home.html')
 
 app.run(debug=True)

@@ -12,3 +12,54 @@
   <a href="{{ url_for('login')}}">Logar</a>
 </div>
 {% endif %}
+
+<button onclick="showModal()">Alterar Senha</button>
+
+<!-- modal.html -->
+<div id="myModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Alterar Senha</h2>
+    <form action="/change_password" method="post">
+      <p>
+        <input type="password" name="new_password" placeholder="Nova Senha" />
+      </p>
+      <p>
+        <input
+          type="password"
+          name="confirm_password"
+          placeholder="Confirmar Nova Senha"
+        />
+      </p>
+      <p><input type="submit" value="Salvar Senha" /></p>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Get the modal element
+  var modal = document.getElementById("myModal");
+
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+
+  // Function to display the modal
+  function showModal() {
+    modal.style.display = "block";
+  }
+
+  // Function to close the modal
+  function closeModal() {
+    modal.style.display = "none";
+  }
+
+  // Close the modal when the user clicks on the <span> element (x)
+  span.onclick = closeModal;
+
+  // Close the modal when the user clicks outside of it
+  window.onclick = function (event) {
+    if (event.target == modal) {
+      closeModal();
+    }
+  };
+</script>
